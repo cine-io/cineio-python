@@ -6,9 +6,7 @@ The python egg for [cine.io](cine.io).
 
 ## Installation
 
-> I haven't registered cine_io as an egg yet on: https://pypi.python.org/pypi
-
-Add this line to your application's Gemfile:
+install cine_io via pip:
 
     pip install cine_io
 
