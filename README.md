@@ -30,6 +30,20 @@ project = client.project.get()
 # => cine_io.Project
 ```
 
+To update your project:
+
+```python
+project = client.project.update({"name": 'new project name'})
+# => cine_io.Project
+```
+
+To delete your project:
+
+```python
+deleted_at = client.project.delete()
+# => String of datetime when the project was deleted
+```
+
 #### Streams
 
 To get all your streams:
@@ -53,11 +67,26 @@ stream = client.streams.create()
 # => cine_io.Stream
 ```
 
+```python
+# you can optionally pass params
+# params
+#  name: 'a stream name'
+stream = client.streams.create({"name": 'new stream name'})
+# => cine_io.Stream
+```
+
 To fetch the [Flash Media Live Encoder](http://www.adobe.com/products/flash-media-encoder.html) profile for a stream:
 
 ```python
 stream = client.streams.fmle_profile('STREAM_ID')
 # => String of profile contents
+```
+
+To delete a stream:
+
+```python
+stream = client.streams.delete('STREAM_ID')
+# => cine_io.Stream
 ```
 
 ## Contributing

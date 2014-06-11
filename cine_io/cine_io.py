@@ -21,6 +21,18 @@ class ProjectsHandler:
     r = requests.get(url, params=payload)
     return Project(r.json())
 
+  def delete(self):
+    payload = {'secretKey': self.client.config['secretKey']}
+    url = BASE_URL + '/project'
+    r = requests.delete(url, params=payload)
+    return r.json()['deletedAt']
+
+  def update(self, payload):
+    payload['secretKey'] = self.client.config['secretKey']
+    url = BASE_URL + '/project'
+    r = requests.put(url, params=payload)
+    return Project(r.json())
+
 class StreamsHandler:
   def __init__(self, client):
     self.client = client
@@ -37,14 +49,29 @@ class StreamsHandler:
     r = requests.get(url, params=payload)
     return Stream(r.json())
 
+  def update(self, id, payload):
+    payload['secretKey'] = self.client.config['secretKey']
+    payload['id'] = id
+    url = BASE_URL + '/stream'
+    r = requests.put(url, params=payload)
+    return Stream(r.json())
+
+  def delete(self, id):
+    payload = {'secretKey': self.client.config['secretKey'], 'id': id}
+    url = BASE_URL + '/stream'
+    r = requests.delete(url, params=payload)
+    return r.json()['deletedAt']
+
   def fmle_profile(self, id):
     payload = {'secretKey': self.client.config['secretKey'], 'fmleProfile': 'true', 'id': id}
     url = BASE_URL + '/stream'
     r = requests.get(url, params=payload)
     return r.json()['content']
 
-  def create(self):
-    payload = {'secretKey': self.client.config['secretKey']}
+  def create(self, payload=None):
+    if (payload is None):
+      payload = {}
+    payload['secretKey'] = self.client.config['secretKey']
     url = BASE_URL + '/stream'
     r = requests.post(url, data=payload)
     return Stream(r.json())

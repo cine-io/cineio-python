@@ -9,7 +9,12 @@ import cine_io
 from mock import patch, Mock
 
 fake_project = {"id": "PROJECT_ID", "name": "PROJECT_NAME"}
+delete_project = {"id": "PROJECT_ID", "deletedAt": "2014-06-11T23:36:59.287Z"}
+delete_stream = {"id": "STREAM_ID", "deletedAt": "2014-06-11T23:39:20.824Z"}
+fake_project_update = {"id": "PROJECT_ID", "name": "new project name"}
 fake_stream_1 = {"id": "STREAM1_ID", "password": "STREAM1_PASSWORD"}
+fake_stream_1_update = {"id": "STREAM1_ID", 'name': 'new stream name'}
+fake_stream_with_name = {"id": "STREAM3_ID", 'name': 'new stream name'}
 fake_stream_2 = {"id": "STREAM2_ID", "password": "STREAM2_PASSWORD"}
 fake_fmle_profile = {"content": "<flashmedialiveencoder_profile></flashmedialiveencoder_profile>"}
 
@@ -35,6 +40,22 @@ class GetProjectTest(CineIOTestCase):
     self.assertEqual(project.id, 'PROJECT_ID')
     self.assertEqual(project.name, 'PROJECT_NAME')
 
+class UpdateProjectTest(CineIOTestCase):
+  @patch('cine_io.requests.put')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, fake_project_update)
+    project = self.client.project.update({'name': 'new project name'})
+    self.assertIsInstance(project, cine_io.Project)
+    self.assertEqual(project.id, 'PROJECT_ID')
+    self.assertEqual(project.name, 'new project name')
+
+class DeleteProjectTest(CineIOTestCase):
+  @patch('cine_io.requests.delete')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, delete_project)
+    deleted_time = self.client.project.delete()
+    self.assertEqual(deleted_time, '2014-06-11T23:36:59.287Z')
+
 class StreamsIndexTest(CineIOTestCase):
   @patch('cine_io.requests.get')
   def runTest(self, mock_requests):
@@ -54,6 +75,22 @@ class StreamGetTest(CineIOTestCase):
     self.assertEqual(stream.id, 'STREAM1_ID')
     self.assertEqual(stream.password, 'STREAM1_PASSWORD')
 
+class StreamDeleteTest(CineIOTestCase):
+  @patch('cine_io.requests.delete')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, delete_stream)
+    deleted_time = self.client.streams.delete('STREAM_ID')
+    self.assertEqual(deleted_time, '2014-06-11T23:39:20.824Z')
+
+class StreamUpdateTest(CineIOTestCase):
+  @patch('cine_io.requests.put')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, fake_stream_1_update)
+    stream = self.client.streams.update('STREAM1_ID', {'name': 'new stream name'})
+    self.assertIsInstance(stream, cine_io.Stream)
+    self.assertEqual(stream.id, 'STREAM1_ID')
+    self.assertEqual(stream.name, 'new stream name')
+
 class StreamFmleProfileTest(CineIOTestCase):
   @patch('cine_io.requests.get')
   def runTest(self, mock_requests):
@@ -69,3 +106,12 @@ class StreamCreateTest(CineIOTestCase):
     self.assertIsInstance(stream, cine_io.Stream)
     self.assertEqual(stream.id, 'STREAM2_ID')
     self.assertEqual(stream.password, 'STREAM2_PASSWORD')
+
+class StreamCreateTest(CineIOTestCase):
+  @patch('cine_io.requests.post')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, fake_stream_with_name)
+    stream = self.client.streams.create({'name': 'new stream name'})
+    self.assertIsInstance(stream, cine_io.Stream)
+    self.assertEqual(stream.id, 'STREAM3_ID')
+    self.assertEqual(stream.name, 'new stream name')
