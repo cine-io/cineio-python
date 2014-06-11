@@ -1,5 +1,4 @@
 import requests
-from StringIO import StringIO
 BASE_URL = 'https://www.cine.io/api/1/-'
 
 class Project:
