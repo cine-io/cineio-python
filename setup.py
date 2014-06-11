@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, find_packages
 
 packages = find_packages(exclude=['test'])
-requires = []
+requires = ['requests >= 2.0']
 
 __version__ = ''
 with open('cine_io/__init__.py', 'r') as fd:

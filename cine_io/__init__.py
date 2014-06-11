@@ -9,9 +9,9 @@ See http://cine.io/ for documentation.
 
 """
 
-from .cine_io import Client
+from .cine_io import Client, Project, Stream, requests
 
-__all__ = [Client]
+__all__ = [Client, Project, Stream, requests]
 __author__ = 'cine.io engineering'
 __copyright__ = 'Copyright 2014 cine.io'
 __license__ = 'MIT'

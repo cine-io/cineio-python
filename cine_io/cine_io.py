@@ -1,6 +1,4 @@
-import urllib2
-import urllib
-import json
+import requests
 from StringIO import StringIO
 BASE_URL = 'https://www.cine.io/api/1/-'
 
@@ -19,39 +17,38 @@ class ProjectsHandler:
     self.client = client
 
   def get(self):
-    params = {'secretKey': self.client.config['secretKey']}
-    req = urllib2.Request(BASE_URL + '/project?' + urllib.urlencode(params))
-    response = urllib2.urlopen(req)
-    return Project(json.loads(response.read()))
+    payload = {'secretKey': self.client.config['secretKey']}
+    url = BASE_URL + '/project'
+    r = requests.get(url, params=payload)
+    return Project(r.json())
 
 class StreamsHandler:
   def __init__(self, client):
     self.client = client
 
   def index(self):
-    params = {'secretKey': self.client.config['secretKey']}
-    req = urllib2.Request(BASE_URL + '/streams?' + urllib.urlencode(params))
-    response = urllib2.urlopen(req)
-    return map(Stream, json.loads(response.read()))
+    payload = {'secretKey': self.client.config['secretKey']}
+    url = BASE_URL + '/streams'
+    r = requests.get(url, params=payload)
+    return map(Stream, r.json())
 
   def get(self, id):
-    params = {'secretKey': self.client.config['secretKey'], 'id': id}
-    req = urllib2.Request(BASE_URL + '/stream?' + urllib.urlencode(params))
-    response = urllib2.urlopen(req)
-    return Stream(json.loads(response.read()))
+    payload = {'secretKey': self.client.config['secretKey'], 'id': id}
+    url = BASE_URL + '/stream'
+    r = requests.get(url, params=payload)
+    return Stream(r.json())
 
   def fmle_profile(self, id):
-    params = {'secretKey': self.client.config['secretKey'], 'fmleProfile': 'true', 'id': id}
-    req = urllib2.Request(BASE_URL + '/stream?' + urllib.urlencode(params))
-    response = urllib2.urlopen(req)
-    return json.loads(response.read())['content']
+    payload = {'secretKey': self.client.config['secretKey'], 'fmleProfile': 'true', 'id': id}
+    url = BASE_URL + '/stream'
+    r = requests.get(url, params=payload)
+    return r.json()['content']
 
   def create(self):
+    payload = {'secretKey': self.client.config['secretKey']}
     url = BASE_URL + '/stream'
-    params = {'secretKey': self.client.config['secretKey']}
-    req = urllib2.Request(url, urllib.urlencode(params))
-    response = urllib2.urlopen(req)
-    return Stream(json.loads(response.read()))
+    r = requests.post(url, data=payload)
+    return Stream(r.json())
 
 class Client:
 
