@@ -16,5 +16,5 @@ __author__ = 'cine.io engineering'
 __copyright__ = 'Copyright 2014 cine.io'
 __license__ = 'MIT'
 __title__ = 'cineio'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __version_info__ = tuple(int(i) for i in __version__.split('.'))
