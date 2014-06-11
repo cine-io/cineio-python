@@ -3,12 +3,12 @@ BASE_URL = 'https://www.cine.io/api/1/-'
 
 class Project:
   def __init__(self, data):
-    for key, value in data.iteritems():
+    for key, value in data.items():
       setattr(self, key, value)
 
 class Stream:
   def __init__(self, data):
-    for key, value in data.iteritems():
+    for key, value in data.items():
       setattr(self, key, value)
 
 class ProjectsHandler:
