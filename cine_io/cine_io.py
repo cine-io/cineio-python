@@ -29,7 +29,7 @@ class StreamsHandler:
     payload = {'secretKey': self.client.config['secretKey']}
     url = BASE_URL + '/streams'
     r = requests.get(url, params=payload)
-    return map(Stream, r.json())
+    return list(map(Stream, r.json()))
 
   def get(self, id):
     payload = {'secretKey': self.client.config['secretKey'], 'id': id}
