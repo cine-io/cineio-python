@@ -60,6 +60,15 @@ stream = client.streams.get('STREAM_ID')
 # => cine_io.Stream
 ```
 
+To update a specific stream:
+
+```python
+# params:
+#  'name': 'some stream name'
+stream = client.streams.update('STREAM_ID', params)
+# => cine_io.Stream
+```
+
 To create a new stream:
 
 ```python
