@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/cine-io/cineio-python.svg?branch=master)](https://travis-ci.org/cine-io/cineio-python)
 
-The python egg for [cine.io](cine.io).
+The [python egg](https://pypi.python.org/pypi/cine_io) for [cine.io](cine.io).
 
 ## Installation
 
