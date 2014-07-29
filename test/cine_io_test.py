@@ -17,6 +17,8 @@ fake_stream_1_update = {"id": "STREAM1_ID", 'name': 'new stream name'}
 fake_stream_with_name = {"id": "STREAM3_ID", 'name': 'new stream name'}
 fake_stream_2 = {"id": "STREAM2_ID", "password": "STREAM2_PASSWORD"}
 fake_fmle_profile = {"content": "<flashmedialiveencoder_profile></flashmedialiveencoder_profile>"}
+fake_stream_recording_1 = {"name": "STREAM1_RECORDING_1_NAME", "url": "STREAM1_RECORDING_1_URL"}
+fake_stream_recording_2 = {"name": "STREAM1_RECORDING_2_NAME", "url": "STREAM1_RECORDING_2_URL"}
 
 def stub_response(mock_requests, response):
   a = Mock()
@@ -65,6 +67,16 @@ class StreamsIndexTest(CineIOTestCase):
     self.assertIsInstance(streams[0], cine_io.Stream)
     self.assertEqual(streams[0].id, 'STREAM1_ID')
     self.assertEqual(streams[1].id, 'STREAM2_ID')
+
+class StreamsIndexTest(CineIOTestCase):
+  @patch('cine_io.requests.get')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, [fake_stream_recording_1, fake_stream_recording_2])
+    recordings = self.client.streams.recordings("STREAM1_ID")
+    self.assertEqual(len(recordings), 2)
+    self.assertIsInstance(recordings[0], cine_io.StreamRecording)
+    self.assertEqual(recordings[0].name, 'STREAM1_RECORDING_1_NAME')
+    self.assertEqual(recordings[1].url, 'STREAM1_RECORDING_2_URL')
 
 class StreamGetTest(CineIOTestCase):
   @patch('cine_io.requests.get')

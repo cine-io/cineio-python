@@ -84,6 +84,14 @@ stream = client.streams.create({"name": 'new stream name'})
 # => cine_io.Stream
 ```
 
+To get all the recordings of stream:
+
+```python
+recordings = client.streams.recordings('STREAM_ID')
+# => [cine_io.StreamRecording, …]
+```
+
+
 To fetch the [Flash Media Live Encoder](http://www.adobe.com/products/flash-media-encoder.html) profile for a stream:
 
 ```python

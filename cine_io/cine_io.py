@@ -11,6 +11,11 @@ class Stream:
     for key, value in data.items():
       setattr(self, key, value)
 
+class StreamRecording:
+  def __init__(self, data):
+    for key, value in data.items():
+      setattr(self, key, value)
+
 class ProjectsHandler:
   def __init__(self, client):
     self.client = client
@@ -48,6 +53,12 @@ class StreamsHandler:
     url = BASE_URL + '/stream'
     r = requests.get(url, params=payload)
     return Stream(r.json())
+
+  def recordings(self, id):
+    payload = {'secretKey': self.client.config['secretKey'], 'id': id}
+    url = BASE_URL + '/stream/recordings'
+    r = requests.get(url, params=payload)
+    return list(map(StreamRecording, r.json()))
 
   def update(self, id, payload):
     payload['secretKey'] = self.client.config['secretKey']
