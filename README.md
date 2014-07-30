@@ -84,14 +84,6 @@ stream = client.streams.create({"name": 'new stream name'})
 # => cine_io.Stream
 ```
 
-To get all the recordings of stream:
-
-```python
-recordings = client.streams.recordings('STREAM_ID')
-# => [cine_io.StreamRecording, …]
-```
-
-
 To fetch the [Flash Media Live Encoder](http://www.adobe.com/products/flash-media-encoder.html) profile for a stream:
 
 ```python
@@ -103,7 +95,21 @@ To delete a stream:
 
 ```python
 stream = client.streams.delete('STREAM_ID')
-# => cine_io.Stream
+# => String of datetime when the stream was deleted
+```
+
+To get all the recordings of stream:
+
+```python
+recordings = client.streams.recordings.index('STREAM_ID')
+# => [cine_io.StreamRecording, …]
+```
+
+To delete a recordings of stream:
+
+```python
+recordings = client.streams.recordings.delete('STREAM_ID', 'recordingName')
+# => String of datetime when the stream recording was deleted
 ```
 
 ## Contributing

@@ -11,6 +11,7 @@ from mock import patch, Mock
 fake_project = {"id": "PROJECT_ID", "name": "PROJECT_NAME"}
 delete_project = {"id": "PROJECT_ID", "deletedAt": "2014-06-11T23:36:59.287Z"}
 delete_stream = {"id": "STREAM_ID", "deletedAt": "2014-06-11T23:39:20.824Z"}
+delete_stream_recording = {"deletedAt": "2014-06-11T23:40:20.824Z"}
 fake_project_update = {"id": "PROJECT_ID", "name": "new project name"}
 fake_stream_1 = {"id": "STREAM1_ID", "password": "STREAM1_PASSWORD"}
 fake_stream_1_update = {"id": "STREAM1_ID", 'name': 'new stream name'}
@@ -68,16 +69,6 @@ class StreamsIndexTest(CineIOTestCase):
     self.assertEqual(streams[0].id, 'STREAM1_ID')
     self.assertEqual(streams[1].id, 'STREAM2_ID')
 
-class StreamsIndexTest(CineIOTestCase):
-  @patch('cine_io.requests.get')
-  def runTest(self, mock_requests):
-    stub_response(mock_requests, [fake_stream_recording_1, fake_stream_recording_2])
-    recordings = self.client.streams.recordings("STREAM1_ID")
-    self.assertEqual(len(recordings), 2)
-    self.assertIsInstance(recordings[0], cine_io.StreamRecording)
-    self.assertEqual(recordings[0].name, 'STREAM1_RECORDING_1_NAME')
-    self.assertEqual(recordings[1].url, 'STREAM1_RECORDING_2_URL')
-
 class StreamGetTest(CineIOTestCase):
   @patch('cine_io.requests.get')
   def runTest(self, mock_requests):
@@ -127,3 +118,20 @@ class StreamCreateTest(CineIOTestCase):
     self.assertIsInstance(stream, cine_io.Stream)
     self.assertEqual(stream.id, 'STREAM3_ID')
     self.assertEqual(stream.name, 'new stream name')
+
+class StreamRecordingsIndexTest(CineIOTestCase):
+  @patch('cine_io.requests.get')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, [fake_stream_recording_1, fake_stream_recording_2])
+    recordings = self.client.streams.recordings.index("STREAM1_ID")
+    self.assertEqual(len(recordings), 2)
+    self.assertIsInstance(recordings[0], cine_io.StreamRecording)
+    self.assertEqual(recordings[0].name, 'STREAM1_RECORDING_1_NAME')
+    self.assertEqual(recordings[1].url, 'STREAM1_RECORDING_2_URL')
+
+class StreamRecordingsDeleteTest(CineIOTestCase):
+  @patch('cine_io.requests.delete')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, delete_stream_recording)
+    deleted_time = self.client.streams.recordings.delete("STREAM1_ID", "NAME")
+    self.assertEqual(deleted_time, '2014-06-11T23:40:20.824Z')

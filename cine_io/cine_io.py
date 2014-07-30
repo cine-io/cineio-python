@@ -41,6 +41,7 @@ class ProjectsHandler:
 class StreamsHandler:
   def __init__(self, client):
     self.client = client
+    self.recordings = StreamRecordingsHandler(client)
 
   def index(self):
     payload = {'secretKey': self.client.config['secretKey']}
@@ -53,12 +54,6 @@ class StreamsHandler:
     url = BASE_URL + '/stream'
     r = requests.get(url, params=payload)
     return Stream(r.json())
-
-  def recordings(self, id):
-    payload = {'secretKey': self.client.config['secretKey'], 'id': id}
-    url = BASE_URL + '/stream/recordings'
-    r = requests.get(url, params=payload)
-    return list(map(StreamRecording, r.json()))
 
   def update(self, id, payload):
     payload['secretKey'] = self.client.config['secretKey']
@@ -86,6 +81,23 @@ class StreamsHandler:
     url = BASE_URL + '/stream'
     r = requests.post(url, data=payload)
     return Stream(r.json())
+
+
+class StreamRecordingsHandler:
+  def __init__(self, client):
+    self.client = client
+
+  def index(self, id):
+    payload = {'secretKey': self.client.config['secretKey'], 'id': id}
+    url = BASE_URL + '/stream/recordings'
+    r = requests.get(url, params=payload)
+    return list(map(StreamRecording, r.json()))
+
+  def delete(self, id, recording_name):
+    payload = {'secretKey': self.client.config['secretKey'], 'id': id, 'name': recording_name}
+    url = BASE_URL + '/stream/recording'
+    r = requests.delete(url, params=payload)
+    return r.json()['deletedAt']
 
 class Client:
 
