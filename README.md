@@ -81,7 +81,7 @@ stream = client.streams.create()
 # you can optionally pass params
 # params
 #  name: 'a stream name'
-#  record: True|False (default False). Record: true will save recordings of all streaming sessions
+#  record: True|False (default False). record: True will save recordings of all streaming sessions
 
 stream = client.streams.create({"name": 'new stream name'})
 # => cine_io.Stream
