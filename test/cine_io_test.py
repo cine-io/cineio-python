@@ -13,10 +13,11 @@ delete_project = {"id": "PROJECT_ID", "deletedAt": "2014-06-11T23:36:59.287Z"}
 delete_stream = {"id": "STREAM_ID", "deletedAt": "2014-06-11T23:39:20.824Z"}
 delete_stream_recording = {"deletedAt": "2014-06-11T23:40:20.824Z"}
 fake_project_update = {"id": "PROJECT_ID", "name": "new project name"}
-fake_stream_1 = {"id": "STREAM1_ID", "password": "STREAM1_PASSWORD"}
-fake_stream_1_update = {"id": "STREAM1_ID", 'name': 'new stream name'}
-fake_stream_with_name = {"id": "STREAM3_ID", 'name': 'new stream name'}
-fake_stream_2 = {"id": "STREAM2_ID", "password": "STREAM2_PASSWORD"}
+fake_stream_1 = {"id": "STREAM1_ID", "password": "STREAM1_PASSWORD", "record": False}
+fake_stream_1_update = {"id": "STREAM1_ID", 'name': 'new stream name', "record": False}
+fake_stream_with_name = {"id": "STREAM3_ID", 'name': 'new stream name', "record": False}
+fake_stream_with_record = {"id": "STREAM3_ID", "record": True}
+fake_stream_2 = {"id": "STREAM2_ID", "password": "STREAM2_PASSWORD", "record": False}
 fake_fmle_profile = {"content": "<flashmedialiveencoder_profile></flashmedialiveencoder_profile>"}
 fake_stream_recording_1 = {"name": "STREAM1_RECORDING_1_NAME", "url": "STREAM1_RECORDING_1_URL"}
 fake_stream_recording_2 = {"name": "STREAM1_RECORDING_2_NAME", "url": "STREAM1_RECORDING_2_URL"}
@@ -109,8 +110,9 @@ class StreamCreateTest(CineIOTestCase):
     self.assertIsInstance(stream, cine_io.Stream)
     self.assertEqual(stream.id, 'STREAM2_ID')
     self.assertEqual(stream.password, 'STREAM2_PASSWORD')
+    self.assertEqual(stream.record, False)
 
-class StreamCreateTest(CineIOTestCase):
+class StreamCreateWithNameTest(CineIOTestCase):
   @patch('cine_io.requests.post')
   def runTest(self, mock_requests):
     stub_response(mock_requests, fake_stream_with_name)
@@ -118,6 +120,16 @@ class StreamCreateTest(CineIOTestCase):
     self.assertIsInstance(stream, cine_io.Stream)
     self.assertEqual(stream.id, 'STREAM3_ID')
     self.assertEqual(stream.name, 'new stream name')
+    self.assertEqual(stream.record, False)
+
+class StreamCreateWithRecordTest(CineIOTestCase):
+  @patch('cine_io.requests.post')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, fake_stream_with_record)
+    stream = self.client.streams.create({'record': True})
+    self.assertIsInstance(stream, cine_io.Stream)
+    self.assertEqual(stream.id, 'STREAM3_ID')
+    self.assertEqual(stream.record, True)
 
 class StreamRecordingsIndexTest(CineIOTestCase):
   @patch('cine_io.requests.get')
