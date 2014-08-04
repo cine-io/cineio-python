@@ -60,16 +60,6 @@ stream = client.streams.get('STREAM_ID')
 # => cine_io.Stream
 ```
 
-To update a specific stream:
-
-```python
-# params:
-#  'name': 'some stream name'
-#  record: True|False (updating a stream from true to false will delete old stream recordings)
-stream = client.streams.update('STREAM_ID', params)
-# => cine_io.Stream
-```
-
 To create a new stream:
 
 ```python
@@ -84,6 +74,16 @@ stream = client.streams.create()
 #  record: True|False (default False). record: True will save recordings of all streaming sessions
 
 stream = client.streams.create({"name": 'new stream name'})
+# => cine_io.Stream
+```
+
+To update a specific stream:
+
+```python
+# params:
+#  'name': 'some stream name'
+#  record: True|False (updating a stream from true to false will not delete old stream recordings)
+stream = client.streams.update('STREAM_ID', params)
 # => cine_io.Stream
 ```
 
