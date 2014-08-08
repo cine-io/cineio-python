@@ -1,5 +1,10 @@
 import requests
+from .version import __version__
 BASE_URL = 'https://www.cine.io/api/1/-'
+
+HEADERS = {
+  'User-Agent': "cineio-python version-" + __version__
+}
 
 class Project:
   def __init__(self, data):
@@ -23,19 +28,19 @@ class ProjectsHandler:
   def get(self):
     payload = {'secretKey': self.client.config['secretKey']}
     url = BASE_URL + '/project'
-    r = requests.get(url, params=payload)
+    r = requests.get(url, params=payload, headers=HEADERS)
     return Project(r.json())
 
   def delete(self):
     payload = {'secretKey': self.client.config['secretKey']}
     url = BASE_URL + '/project'
-    r = requests.delete(url, params=payload)
+    r = requests.delete(url, params=payload, headers=HEADERS)
     return r.json()['deletedAt']
 
   def update(self, payload):
     payload['secretKey'] = self.client.config['secretKey']
     url = BASE_URL + '/project'
-    r = requests.put(url, params=payload)
+    r = requests.put(url, params=payload, headers=HEADERS)
     return Project(r.json())
 
 class StreamsHandler:
@@ -46,32 +51,32 @@ class StreamsHandler:
   def index(self):
     payload = {'secretKey': self.client.config['secretKey']}
     url = BASE_URL + '/streams'
-    r = requests.get(url, params=payload)
+    r = requests.get(url, params=payload, headers=HEADERS)
     return list(map(Stream, r.json()))
 
   def get(self, id):
     payload = {'secretKey': self.client.config['secretKey'], 'id': id}
     url = BASE_URL + '/stream'
-    r = requests.get(url, params=payload)
+    r = requests.get(url, params=payload, headers=HEADERS)
     return Stream(r.json())
 
   def update(self, id, payload):
     payload['secretKey'] = self.client.config['secretKey']
     payload['id'] = id
     url = BASE_URL + '/stream'
-    r = requests.put(url, params=payload)
+    r = requests.put(url, params=payload, headers=HEADERS)
     return Stream(r.json())
 
   def delete(self, id):
     payload = {'secretKey': self.client.config['secretKey'], 'id': id}
     url = BASE_URL + '/stream'
-    r = requests.delete(url, params=payload)
+    r = requests.delete(url, params=payload, headers=HEADERS)
     return r.json()['deletedAt']
 
   def fmle_profile(self, id):
     payload = {'secretKey': self.client.config['secretKey'], 'fmleProfile': 'true', 'id': id}
     url = BASE_URL + '/stream'
-    r = requests.get(url, params=payload)
+    r = requests.get(url, params=payload, headers=HEADERS)
     return r.json()['content']
 
   def create(self, payload=None):
@@ -90,13 +95,13 @@ class StreamRecordingsHandler:
   def index(self, id):
     payload = {'secretKey': self.client.config['secretKey'], 'id': id}
     url = BASE_URL + '/stream/recordings'
-    r = requests.get(url, params=payload)
+    r = requests.get(url, params=payload, headers=HEADERS)
     return list(map(StreamRecording, r.json()))
 
   def delete(self, id, recording_name):
     payload = {'secretKey': self.client.config['secretKey'], 'id': id, 'name': recording_name}
     url = BASE_URL + '/stream/recording'
-    r = requests.delete(url, params=payload)
+    r = requests.delete(url, params=payload, headers=HEADERS)
     return r.json()['deletedAt']
 
 class Client:
