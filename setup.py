@@ -9,7 +9,7 @@ packages = find_packages(exclude=['test'])
 requires = ['requests >= 2.0']
 
 __version__ = ''
-with open('cine_io/__init__.py', 'r') as fd:
+with open('cine_io/version.py', 'r') as fd:
     reg = re.compile(r'__version__ = [\'"]([^\'"]*)[\'"]')
     for line in fd:
         m = reg.match(line)
