@@ -17,11 +17,21 @@ install cine_io via pip:
 ```python
 import cine_io
 client = cine_io.Client({"secretKey": "CINE_IO_SECRET_KEY"})
+client = cine_io.Client({"secretKey": "CINE_IO_SECRET_KEY", "masterKey": "CINE_IO_MASTER_KEY"})
 ```
 
 ### Methods
 
 #### Projects
+
+To get data about your projects:
+
+```python
+project = client.projects.index()
+# => [cine_io.Project, …]
+```
+
+#### Project
 
 To get data about your project:
 

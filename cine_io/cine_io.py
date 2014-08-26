@@ -25,6 +25,16 @@ class ProjectsHandler:
   def __init__(self, client):
     self.client = client
 
+  def index(self):
+    payload = {'masterKey': self.client.config['masterKey']}
+    url = BASE_URL + '/projects'
+    r = requests.get(url, params=payload, headers=HEADERS)
+    return list(map(Project, r.json()))
+
+class ProjectHandler:
+  def __init__(self, client):
+    self.client = client
+
   def get(self):
     payload = {'secretKey': self.client.config['secretKey']}
     url = BASE_URL + '/project'
@@ -108,5 +118,6 @@ class Client:
 
   def __init__(self, config):
     self.config = config
-    self.project = ProjectsHandler(self)
+    self.project = ProjectHandler(self)
+    self.projects = ProjectsHandler(self)
     self.streams = StreamsHandler(self)

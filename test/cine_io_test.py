@@ -9,6 +9,7 @@ import cine_io
 from mock import patch, Mock
 
 fake_project = {"id": "PROJECT_ID", "name": "PROJECT_NAME"}
+fake_project_2 = {"id": "SECOND_PROJECT_ID", "name": "SECOND_PROJECT_NAME"}
 delete_project = {"id": "PROJECT_ID", "deletedAt": "2014-06-11T23:36:59.287Z"}
 delete_stream = {"id": "STREAM_ID", "deletedAt": "2014-06-11T23:39:20.824Z"}
 delete_stream_recording = {"deletedAt": "2014-06-11T23:40:20.824Z"}
@@ -30,10 +31,22 @@ def stub_response(mock_requests, response):
 class CineIOTestCase(unittest.TestCase):
   def setUp(self):
     self.client = cine_io.Client({"secretKey": "CINE_IO_SECRET_KEY"})
+    self.masterClient = cine_io.Client({"masterKey": "CINE_IO_MASTER_KEY"})
 
 class ConfigTest(CineIOTestCase):
   def runTest(self):
     self.assertEqual(self.client.config, {"secretKey": "CINE_IO_SECRET_KEY"})
+
+class IndexProjectsTest(CineIOTestCase):
+  @patch('cine_io.requests.get')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, [fake_project, fake_project_2])
+    projects = self.masterClient.projects.index()
+    self.assertEqual(len(projects), 2)
+    self.assertIsInstance(projects[0], cine_io.Project)
+    self.assertEqual(projects[0].id, 'PROJECT_ID')
+    self.assertEqual(projects[1].id, 'SECOND_PROJECT_ID')
+    self.assertEqual(projects[0].name, 'PROJECT_NAME')
 
 class GetProjectTest(CineIOTestCase):
   @patch('cine_io.requests.get')
