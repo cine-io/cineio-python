@@ -58,8 +58,11 @@ class StreamsHandler:
     self.client = client
     self.recordings = StreamRecordingsHandler(client)
 
-  def index(self):
-    payload = {'secretKey': self.client.config['secretKey']}
+  def index(self, payload=None):
+    if (payload is None):
+      payload = {}
+    payload['secretKey'] = self.client.config['secretKey']
+
     url = BASE_URL + '/streams'
     r = requests.get(url, params=payload, headers=HEADERS)
     return list(map(Stream, r.json()))

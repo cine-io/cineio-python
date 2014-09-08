@@ -83,6 +83,16 @@ class StreamsIndexTest(CineIOTestCase):
     self.assertEqual(streams[0].id, 'STREAM1_ID')
     self.assertEqual(streams[1].id, 'STREAM2_ID')
 
+class StreamsIndexWithNameTest(CineIOTestCase):
+  @patch('cine_io.requests.get')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, [fake_stream_1, fake_stream_2])
+    streams = self.client.streams.index({"name": 'my name'})
+    self.assertEqual(len(streams), 2)
+    self.assertIsInstance(streams[0], cine_io.Stream)
+    self.assertEqual(streams[0].id, 'STREAM1_ID')
+    self.assertEqual(streams[1].id, 'STREAM2_ID')
+
 class StreamGetTest(CineIOTestCase):
   @patch('cine_io.requests.get')
   def runTest(self, mock_requests):
