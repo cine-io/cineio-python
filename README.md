@@ -60,6 +60,7 @@ To get all your streams:
 
 ```python
 streams = client.streams.index()
+streams = client.streams.index({"name": "my custom name"})
 # => [cine_io.Stream, …]
 ```
 
