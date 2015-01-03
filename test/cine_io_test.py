@@ -77,7 +77,7 @@ class PeerGenerateIdentitySignature(CineIOTestCase):
   @patch('time.time')
   def runTest(self, mock_requests):
     mock_requests.return_value = 1420261680.958718
-    response = self.client.peer.generate_identity_signature("Thomas")
+    response = self.client.peer.generate_identity_signature('Thomas')
     self.assertEqual(response['identity'], 'Thomas')
     self.assertEqual(response['signature'], '17b3c8404d89f92799a1bdb955e6f28f0a318646')
     self.assertEqual(response['timestamp'], 1420261680)
