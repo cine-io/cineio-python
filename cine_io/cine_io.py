@@ -126,7 +126,7 @@ class Peer:
     timestamp = int(time.time())
     m = hashlib.sha1()
     signature_string = "identity="+identity+"&timestamp="+str(timestamp)+self.client.config['secretKey']
-    m.update(signature_string)
+    m.update(signature_string.encode('utf-8'))
     signature = m.hexdigest()
     return {'identity': identity, 'timestamp': timestamp, 'signature': signature}
 
