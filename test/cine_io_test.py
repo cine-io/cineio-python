@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, time
 testdir = os.path.dirname(__file__)
 srcdir = '../cine_io'
 sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
@@ -72,6 +72,16 @@ class DeleteProjectTest(CineIOTestCase):
     stub_response(mock_requests, delete_project)
     deleted_time = self.client.project.delete()
     self.assertEqual(deleted_time, '2014-06-11T23:36:59.287Z')
+
+class PeerGenerateIdentitySignature(CineIOTestCase):
+  @patch('time.time')
+  def runTest(self, mock_requests):
+    mock_requests.return_value = 1420261680.958718
+    response = self.client.peer.generate_identity_signature("Thomas")
+    print response
+    self.assertEqual(response['identity'], 'Thomas')
+    self.assertEqual(response['signature'], '17b3c8404d89f92799a1bdb955e6f28f0a318646')
+    self.assertEqual(response['timestamp'], 1420261680)
 
 class StreamsIndexTest(CineIOTestCase):
   @patch('cine_io.requests.get')

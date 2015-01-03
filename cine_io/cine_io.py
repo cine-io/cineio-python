@@ -1,3 +1,4 @@
+import time, hashlib
 import requests
 from .version import __version__
 BASE_URL = 'https://www.cine.io/api/1/-'
@@ -117,6 +118,18 @@ class StreamRecordingsHandler:
     r = requests.delete(url, params=payload, headers=HEADERS)
     return r.json()['deletedAt']
 
+class Peer:
+  def __init__(self, client):
+    self.client = client
+
+  def generate_identity_signature(self, identity):
+    timestamp = int(time.time())
+    m = hashlib.sha1()
+    signature_string = "identity="+identity+"&timestamp="+str(timestamp)+self.client.config['secretKey']
+    m.update(signature_string)
+    signature = m.hexdigest()
+    return {'identity': identity, 'timestamp': timestamp, 'signature': signature}
+
 class Client:
 
   def __init__(self, config):
@@ -124,3 +137,4 @@ class Client:
     self.project = ProjectHandler(self)
     self.projects = ProjectsHandler(self)
     self.streams = StreamsHandler(self)
+    self.peer = Peer(self)
