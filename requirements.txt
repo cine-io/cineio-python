@@ -1,3 +1,2 @@
 requests >= 2.0
-python-dateutil >= 2.4
 nested_query_string >= 0.0.1
