@@ -1,6 +1,8 @@
 import time, hashlib
 import requests
+from nested_query_string import NestedQueryString
 from .version import __version__
+
 BASE_URL = 'https://www.cine.io/api/1/-'
 
 HEADERS = {
@@ -130,6 +132,24 @@ class Peer:
     signature = m.hexdigest()
     return {'identity': identity, 'timestamp': timestamp, 'signature': signature}
 
+class UsageHandler:
+  def __init__(self, client):
+    self.client = client
+
+  def project(self, options):
+    payload = {'secretKey': self.client.config['secretKey'], 'month': options['month'].isoformat(), 'report': options['report']}
+    params = NestedQueryString.encode(payload)
+    url = BASE_URL + '/usage/project'
+    r = requests.get(url, params=params, headers=HEADERS)
+    return r.json()
+
+  def stream(self, id, options):
+    payload = {'id': id, 'secretKey': self.client.config['secretKey'], 'month': options['month'].isoformat(), 'report': options['report']}
+    params = NestedQueryString.encode(payload)
+    url = BASE_URL + '/usage/stream'
+    r = requests.get(url, params=params, headers=HEADERS)
+    return r.json()
+
 class Client:
 
   def __init__(self, config):
@@ -138,3 +158,4 @@ class Client:
     self.projects = ProjectsHandler(self)
     self.streams = StreamsHandler(self)
     self.peer = Peer(self)
+    self.usage = UsageHandler(self)

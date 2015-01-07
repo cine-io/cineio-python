@@ -6,9 +6,10 @@ import sys
 from setuptools import setup, find_packages
 
 packages = find_packages(exclude=['test'])
-requires = ['requests >= 2.0']
+requires = ['requests >= 2.0', 'python-dateutil >= 2.4', 'nested_query_string >= 0.0.1']
 
 __version__ = ''
+
 with open('cine_io/version.py', 'r') as fd:
     reg = re.compile(r'__version__ = [\'"]([^\'"]*)[\'"]')
     for line in fd:

@@ -7,6 +7,7 @@ import unittest
 import json
 import cine_io
 from mock import patch, Mock
+import dateutil.parser
 
 fake_project = {"id": "PROJECT_ID", "name": "PROJECT_NAME"}
 fake_project_2 = {"id": "SECOND_PROJECT_ID", "name": "SECOND_PROJECT_NAME"}
@@ -22,6 +23,8 @@ fake_stream_2 = {"id": "STREAM2_ID", "password": "STREAM2_PASSWORD", "record": F
 fake_fmle_profile = {"content": "<flashmedialiveencoder_profile></flashmedialiveencoder_profile>"}
 fake_stream_recording_1 = {"name": "STREAM1_RECORDING_1_NAME", "url": "STREAM1_RECORDING_1_URL"}
 fake_stream_recording_2 = {"name": "STREAM1_RECORDING_2_NAME", "url": "STREAM1_RECORDING_2_URL"}
+project_usage = {'secretKey': 'CINE_IO_SECRET_KEY', 'bandwidth': 1073741824, 'storage': 2147483648, 'month': '2015-01-10T00:00:00.000Z'}
+stream_usage = {'id': 'STREAM1_ID', 'secretKey': 'CINE_IO_SECRET_KEY', 'bandwidth': 1073741824, 'storage': 2147483648, 'month': '2015-01-10T00:00:00.000Z'}
 
 def stub_response(mock_requests, response):
   a = Mock()
@@ -179,3 +182,27 @@ class StreamRecordingsDeleteTest(CineIOTestCase):
     stub_response(mock_requests, delete_stream_recording)
     deleted_time = self.client.streams.recordings.delete("STREAM1_ID", "NAME")
     self.assertEqual(deleted_time, '2014-06-11T23:40:20.824Z')
+
+class ProjectUsageTest(CineIOTestCase):
+  @patch('cine_io.requests.get')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, project_usage)
+    month = dateutil.parser.parse("January 10 2015")
+    options = {'month': month, 'report': ['bandwidth', 'storage']}
+    response = self.client.usage.project(options)
+    self.assertEqual(response['month'], '2015-01-10T00:00:00.000Z')
+    self.assertEqual(response['bandwidth'], 1073741824)
+    self.assertEqual(response['storage'], 2147483648)
+
+class StreamUsageTest(CineIOTestCase):
+  @patch('cine_io.requests.get')
+  def runTest(self, mock_requests):
+    stub_response(mock_requests, stream_usage)
+    id = "STREAM1_ID"
+    month = dateutil.parser.parse("January 10 2015")
+    options = {'month': month, 'report': ['bandwidth', 'storage']}
+    response = self.client.usage.stream(id, options)
+    self.assertEqual(response['month'], '2015-01-10T00:00:00.000Z')
+    self.assertEqual(response['bandwidth'], 1073741824)
+    self.assertEqual(response['storage'], 2147483648)
+    self.assertEqual(response['id'], "STREAM1_ID")
